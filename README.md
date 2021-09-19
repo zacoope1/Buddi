@@ -32,11 +32,11 @@ npm install
 or 
 yarn install
 ```
-#### Then to start the server run:
+#### To start the server in the development environment run:
 ```
-npm run start 
+npm run dev 
 or
-yarn run start
+yarn run dev
 ```
 ---
 ## Build for Prod
@@ -44,4 +44,11 @@ yarn run start
 npm run build
 or
 yarn run build
+```
+
+## Run in prod
+```
+npm run start
+or
+yarn run start
 ```
