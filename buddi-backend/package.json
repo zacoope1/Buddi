@@ -1,0 +1,11 @@
+{
+  "name": "buddi-backend",
+  "version": "1.0.0",
+  "description": "Buddi Backend",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zachary Cooper",
+  "license": "MIT"
+}
