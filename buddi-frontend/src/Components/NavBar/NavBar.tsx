@@ -1,18 +1,25 @@
 import styled from 'styled-components';
 import { Link as RouterLink } from 'react-router-dom';
 import { HOME, PROFILE } from '../../Routes';
+import { useUserContext } from '../../Contexts/UserContext';
 
-export const NavBar = (): JSX.Element => (
-  <StyledNavBar>
-    <NavList>
-      <Link to={HOME}>Home</Link>
-      <Link to={PROFILE}>Profile</Link>
-    </NavList>
-    <ProfileList>
-      <button>Log Out</button>
-    </ProfileList>
-  </StyledNavBar>
-);
+export const NavBar = (): JSX.Element => {
+  const { isLoggedIn, performLogOut } = useUserContext();
+
+  return (
+    <StyledNavBar>
+      <NavList>
+        <Link to={HOME}>Home</Link>
+        <Link to={PROFILE}>Profile</Link>
+      </NavList>
+      {isLoggedIn && (
+        <ProfileList>
+          <button onClick={performLogOut}>Log Out</button>
+        </ProfileList>
+      )}
+    </StyledNavBar>
+  );
+};
 
 const StyledNavBar = styled.div`
   display: flex;
