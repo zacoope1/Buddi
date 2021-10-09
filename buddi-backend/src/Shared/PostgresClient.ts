@@ -7,7 +7,7 @@ export const getPostgresConfig = (): pg.ClientConfig => {
     user: getEnvironementVariable('DB_USER_NAME'),
     password: getEnvironementVariable('DB_PASSWORD'),
     database: getEnvironementVariable('DB_NAME'),
-    host: getEnvironementVariable('DB_HOST_NAME'),
+    host: getEnvironementVariable('IP_ADDRESS'),
     port: Number(getEnvironementVariable('DB_PORT')),
   };
 };
