@@ -7,6 +7,8 @@ import { createUserString } from './UserQueries';
 
 export const UserController = express.Router();
 
+UserController.get('/', async (req, res) => res.send('Hello, world!'));
+
 UserController.post('/create', async (req, res) => {
   const newUser: NewUserRequest = req.body;
 

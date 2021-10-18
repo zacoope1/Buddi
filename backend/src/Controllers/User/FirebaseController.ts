@@ -1,8 +1,9 @@
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
 import { getEnvironementVariable } from '../../Shared/EnvrironmentHelper';
+import { initializeApp } from 'firebase/app';
+import { symlinkSync } from 'fs';
+import { exit } from 'process';
 
-type FirebaseConfigType = {
+export type FirebaseConfigType = {
   readonly apiKey: string;
   readonly authDomain: string;
   readonly projectId: string;
@@ -35,3 +36,5 @@ export const getFirebaseConfig = (): FirebaseConfigType | undefined => {
     return undefined;
   }
 };
+
+export const getFirebaseApp = (config: FirebaseConfigType) => initializeApp(config);
