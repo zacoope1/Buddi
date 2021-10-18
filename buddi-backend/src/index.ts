@@ -4,13 +4,21 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { getEnvironementVariable } from './Shared/EnvrironmentHelper';
 import { UserController } from './Controllers/User/UserController';
+import { getFirebaseConfig } from './Controllers/User/FirebaseController';
 
 dotenv.config();
 
 const PORT = getEnvironementVariable('SERVER_PORT');
 
 if (!PORT) {
-  console.error('Failed to retrieve port from envionment.');
+  console.error('Failed To Retrieve Server Port From Environment.');
+  process.exit(1);
+}
+
+const FIREBASE_CONFIG = getFirebaseConfig();
+
+if (FIREBASE_CONFIG === undefined) {
+  console.error('Failed To Retrieve Firebase Config From Environment.');
   process.exit(1);
 }
 
