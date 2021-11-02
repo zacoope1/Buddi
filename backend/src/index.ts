@@ -4,7 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { getEnvironementVariable } from './Shared/EnvrironmentHelper';
 import { UserController } from './Controllers/User/UserController';
-import { getFirebaseConfig, getFirebaseApp } from './Controllers/User/FirebaseController';
+import { getFirebaseConfig } from './Controllers/User/FirebaseController';
 import FirebaseAdmin from 'firebase-admin';
 
 dotenv.config();
@@ -30,7 +30,7 @@ if (!serviceAccount) {
   process.exit(1);
 }
 
-const admin = FirebaseAdmin.initializeApp({
+const firebaseAdmin = FirebaseAdmin.initializeApp({
   credential: FirebaseAdmin.credential.cert(serviceAccount),
 });
 
@@ -41,7 +41,7 @@ app.use(express.json());
 
 /* Authorization */
 const checkAuth = (req: any, res: any, next: any) => {
-  if (req.headers.authtoken && admin.auth().verifyIdToken(req.headers.authtoken)) {
+  if (req.headers.authtoken && firebaseAdmin.auth().verifyIdToken(req.headers.authtoken)) {
     next();
   } else {
     res.status(403).send('Unauthorized!');
@@ -49,7 +49,7 @@ const checkAuth = (req: any, res: any, next: any) => {
 };
 
 /* Add Authorization Before Endpoint */
-// app.use('/user', checkAuth); Example to add auth to UserController
+app.use('/user', checkAuth); //Example to add auth to UserController
 
 /* Add Controllers to Router */
 app.use('/user', UserController);

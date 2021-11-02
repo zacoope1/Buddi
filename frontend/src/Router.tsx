@@ -1,6 +1,6 @@
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { HOME, PROFILE } from './Routes';
+import { HOME, PROFILE, PAGE_NOT_FOUND } from './Routes';
 import { useThemeContext } from './Contexts/ThemeContext';
 import { DarkTheme, LightTheme } from './Components/Theme/Themes';
 import { Home } from './Pages/Home/Home';
@@ -21,7 +21,8 @@ export const AppRouter = (): JSX.Element => {
           <Switch>
             <RouteWrapper path={HOME} mustBeLoggedIn={false} exact component={Home} layout={'NavBar'} />
             <RouteWrapper path={PROFILE} mustBeLoggedIn={true} exact component={Profile} layout={'NavBar'} />
-            <RouteWrapper path={HOME} mustBeLoggedIn={false} component={NotFound} layout={'Default'} />
+            <RouteWrapper path={PAGE_NOT_FOUND} mustBeLoggedIn={false} component={NotFound} layout={'Default'} />
+            <Redirect to="/404" />
           </Switch>
         </Router>
       </UserContextProvider>

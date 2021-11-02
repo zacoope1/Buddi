@@ -1,10 +1,10 @@
+import { User } from '@firebase/auth';
 import React, { HTMLAttributes, useContext, useState } from 'react';
-import { User } from '../Models/User/User';
 
 type UserContextType = {
   readonly user: User | undefined;
   readonly isLoggedIn: boolean;
-  performLogIn: () => void;
+  performLogIn: (user: User) => void;
   performLogOut: () => void;
 };
 
@@ -12,18 +12,12 @@ export const UserContext = React.createContext<UserContextType | undefined>(unde
 
 export const UserContextProvider = ({ children }: HTMLAttributes<HTMLElement>) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [user, setUser] = useState<User | undefined>({
-    firstName: 'Zac',
-    lastName: 'Cooper',
-    username: 'Zacer111',
-    email: 'zacoope1@asu.edu',
-    handle: 'Zacoope1',
-    accountCreated: Date.now().toLocaleString('en-US'),
-  });
+  const [user, setUser] = useState<User | undefined>();
 
-  const performLogIn = () => {
-    //Create Session and Cache
+  const performLogIn = (user: User) => {
+    setUser(user);
     setIsLoggedIn(true);
+    //Create Session In Mongo
   };
 
   const performLogOut = () => {

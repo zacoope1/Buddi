@@ -1,7 +1,5 @@
 import { getEnvironementVariable } from '../../Shared/EnvrironmentHelper';
 import { initializeApp } from 'firebase/app';
-import { symlinkSync } from 'fs';
-import { exit } from 'process';
 
 export type FirebaseConfigType = {
   readonly apiKey: string;

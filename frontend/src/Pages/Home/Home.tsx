@@ -12,7 +12,7 @@ const HomeComponent = () => {
 
   return (
     <>
-      <text>Welcome{user && `, ${user.firstName}`}!</text>
+      <text>Welcome{user && `, ${user.displayName}`}!</text>
     </>
   );
 };
