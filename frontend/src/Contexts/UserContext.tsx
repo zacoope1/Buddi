@@ -1,11 +1,12 @@
 import { User } from '@firebase/auth';
-import React, { HTMLAttributes, useContext, useState } from 'react';
+import React, { Dispatch, HTMLAttributes, SetStateAction, useContext, useState } from 'react';
 
 type UserContextType = {
   readonly user: User | undefined;
   readonly isLoggedIn: boolean;
   performLogIn: (user: User) => void;
   performLogOut: () => void;
+  setUser: Dispatch<SetStateAction<User | undefined>>;
 };
 
 export const UserContext = React.createContext<UserContextType | undefined>(undefined);
@@ -26,7 +27,9 @@ export const UserContextProvider = ({ children }: HTMLAttributes<HTMLElement>) =
   };
 
   return (
-    <UserContext.Provider value={{ user, isLoggedIn, performLogIn, performLogOut }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, isLoggedIn, setUser, performLogIn, performLogOut }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 

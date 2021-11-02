@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { useUserContext } from '../../Contexts/UserContext';
 import { firebaseAuth, auth } from '../../Services/FirebaseService';
 import { useHistory } from 'react-router-dom';
-import { Button } from '../../Components/Common/Button';
+import { Button, GoogleIDPButton } from '../../Components/Common/Button';
+import { TextButton } from '../../Components/Common/TextButton';
 
 export const Login = (): JSX.Element => {
   const { performLogIn } = useUserContext();
   const history = useHistory();
+  const [isRegister, setIsRegister] = useState<boolean>(false);
 
   const handleLogInWithGoogle = async () => {
     const provider = new firebaseAuth.GoogleAuthProvider();
@@ -17,14 +19,56 @@ export const Login = (): JSX.Element => {
       .catch(() => history.push('/404'));
   };
 
+  const toggleRegister = () => {
+    setIsRegister(!isRegister);
+  };
+
   return (
     <StyledLoginPage>
       <StyledLoginPanel>
-        <h1>Login</h1>
-        <EmailLoginForm />
-        <Button onClick={handleLogInWithGoogle}>Sign In With Google</Button>
+        <h1>{isRegister ? 'Sign Up' : 'Login'}</h1>
+        {isRegister ? <RegisterForm /> : <EmailLoginForm />}
+        <GoogleIDPButton onClick={handleLogInWithGoogle} />
+        <TextButton onClick={toggleRegister}>
+          {isRegister ? 'Already Have An Account?' : 'Sign Up With Email'}
+        </TextButton>
       </StyledLoginPanel>
     </StyledLoginPage>
+  );
+};
+
+const RegisterForm = (): JSX.Element => {
+  const { performLogIn } = useUserContext();
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+  const [error, setError] = useState<string>('');
+
+  const handleRegisterUser = async () => {
+    if (email.length <= 0 || password.length <= 0 || passwordConfirm.length <= 0) {
+      setError('One or more fields are empty');
+    } else if (password !== passwordConfirm) {
+      setError('Passwords do not match.');
+    } else {
+      await firebaseAuth
+        .createUserWithEmailAndPassword(auth, email, password)
+        .then(credentials => {
+          performLogIn(credentials.user);
+        })
+        .catch(error => {
+          setError(error.message);
+        });
+    }
+  };
+
+  return (
+    <StyledForm>
+      {error && error.length > 0 && <ErrorText>⚠️ {error}</ErrorText>}
+      <StyledInput onChange={e => setEmail(e.target.value)} type="email" placeholder="Email" />
+      <StyledInput onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" />
+      <StyledInput onChange={e => setPasswordConfirm(e.target.value)} type="password" placeholder="Confirm Password" />
+      <Button onClick={handleRegisterUser}>Sign Up</Button>
+    </StyledForm>
   );
 };
 
@@ -47,18 +91,16 @@ const EmailLoginForm = (): JSX.Element => {
   };
 
   return (
-    <>
-      <StyledLoginForm>
-        {error && error.length > 0 && <ErrorText>⚠️ {error}</ErrorText>}
-        <StyledInput onChange={e => setEmail(e.target.value)} type="email" placeholder="Email" />
-        <StyledInput onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" />
-        <Button onClick={handleEmailLogin}>Sign In</Button>
-      </StyledLoginForm>
-    </>
+    <StyledForm>
+      {error && error.length > 0 && <ErrorText>⚠️ {error}</ErrorText>}
+      <StyledInput onChange={e => setEmail(e.target.value)} type="email" placeholder="Email" />
+      <StyledInput onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" />
+      <Button onClick={handleEmailLogin}>Sign In</Button>
+    </StyledForm>
   );
 };
 
-const ErrorText = styled.text`
+const ErrorText = styled.div`
   color: tomato;
   font-size: 0.75rem;
   font-weight: bold;
@@ -87,7 +129,7 @@ const StyledInput = styled.input`
   }
 `;
 
-const StyledLoginForm = styled.div`
+const StyledForm = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;

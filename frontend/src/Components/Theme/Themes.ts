@@ -11,6 +11,10 @@ type Theme = {
     readonly trim: string;
     readonly button: { readonly color: string; readonly backgroundColor: string };
   };
+  mono: {
+    readonly black: string;
+    readonly white: string;
+  };
   readonly transparent: string;
 };
 
@@ -27,6 +31,10 @@ export const DarkTheme: Theme = {
     trim: '#8E05C2',
     button: { color: '#FF4C29', backgroundColor: '#700B97' },
   },
+  mono: {
+    black: '#111111',
+    white: '#fffffa',
+  },
   transparent: '#00000000',
 };
 export const LightTheme: Theme = {
@@ -41,6 +49,10 @@ export const LightTheme: Theme = {
     backgroundColor: '#add8e6',
     trim: '',
     button: { color: '#181818', backgroundColor: '' },
+  },
+  mono: {
+    black: '#111111',
+    white: '#fffffa',
   },
   transparent: '#00000000',
 };
