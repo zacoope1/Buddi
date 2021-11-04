@@ -6,6 +6,7 @@ import { getEnvironementVariable } from './Shared/EnvrironmentHelper';
 import { UserController } from './Controllers/User/UserController';
 import { getFirebaseConfig } from './Controllers/User/FirebaseController';
 import FirebaseAdmin from 'firebase-admin';
+import { calculateBackoffMillis } from '@firebase/util';
 
 dotenv.config();
 
@@ -36,15 +37,24 @@ const firebaseAdmin = FirebaseAdmin.initializeApp({
 
 const app = express();
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: '*', allowedHeaders: '*', credentials: true, methods: '*' }));
 app.use(express.json());
 
 /* Authorization */
-const checkAuth = (req: any, res: any, next: any) => {
-  if (req.headers.authtoken && firebaseAdmin.auth().verifyIdToken(req.headers.authtoken)) {
-    next();
+const checkAuth = async (req: any, res: any, next: any) => {
+  if (req.headers.authorization) {
+    firebaseAdmin
+      .auth()
+      .verifyIdToken(req.headers.authorization, true)
+      .then(claims => {
+        !claims.email_verified && res.status(403).send('You must verify your email before using this app.');
+        next();
+      })
+      .catch(error => {
+        res.status(403).send(error.message);
+      });
   } else {
-    res.status(403).send('Unauthorized!');
+    res.status(400).send('Bad Request');
   }
 };
 
