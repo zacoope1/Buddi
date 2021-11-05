@@ -41,6 +41,7 @@ export const RouteWrapper = ({
 };
 
 const PageLayout = styled.div`
+  overflow: auto;
   width: 100%;
   height: 100%;
   background: ${props => props.theme.primary.backgroundColor};

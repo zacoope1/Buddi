@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useUserContext } from '../../Contexts/UserContext';
-import { firebaseAuth, auth } from '../../Services/FirebaseService';
+import {
+  SignInWithEmailAndPassword,
+  CreateEmailAndPasswordUser,
+  SignInWithGoogle,
+} from '../../Services/FirebaseService';
 import { useHistory } from 'react-router-dom';
 import { Button, GoogleIDPButton } from '../../Components/Common/Button';
 import { TextButton } from '../../Components/Common/TextButton';
@@ -12,9 +16,7 @@ export const Login = (): JSX.Element => {
   const [isRegister, setIsRegister] = useState<boolean>(false);
 
   const handleLogInWithGoogle = async () => {
-    const provider = new firebaseAuth.GoogleAuthProvider();
-    firebaseAuth
-      .signInWithPopup(auth, provider)
+    SignInWithGoogle()
       .then(credentials => performLogIn(credentials.user))
       .catch(() => history.push('/404'));
   };
@@ -50,14 +52,11 @@ const RegisterForm = (): JSX.Element => {
     } else if (password !== passwordConfirm) {
       setError('Passwords do not match.');
     } else {
-      await firebaseAuth
-        .createUserWithEmailAndPassword(auth, email, password)
+      CreateEmailAndPasswordUser(email, password)
         .then(credentials => {
           performLogIn(credentials.user);
         })
-        .catch(error => {
-          setError(error.message);
-        });
+        .catch(error => setError(error.message));
     }
   };
 
@@ -84,8 +83,7 @@ const EmailLoginForm = (): JSX.Element => {
       return;
     }
     setError('');
-    await firebaseAuth
-      .signInWithEmailAndPassword(auth, email, password)
+    SignInWithEmailAndPassword(email, password)
       .then(credentials => performLogIn(credentials.user))
       .catch(error => setError(error.message));
   };

@@ -1,5 +1,9 @@
 import * as firebase from 'firebase/app';
 import * as firebaseAuth from 'firebase/auth';
+import { UserCredential } from 'firebase/auth';
+import { User } from '@firebase/auth';
+
+export { firebaseAuth };
 
 type FirebaseConfigType = {
   readonly apiKey: string;
@@ -21,7 +25,24 @@ const getFirebaseConfig = (): FirebaseConfigType => ({
   measurementId: 'G-4RBT8HHXT2',
 });
 
-const firebaseApp = firebase.initializeApp(getFirebaseConfig());
+export const firebaseApp = firebase.initializeApp(getFirebaseConfig());
 const auth = firebaseAuth.getAuth(firebaseApp);
 
-export { firebase, firebaseApp, auth, firebaseAuth };
+export const SendVerifyEmail = async (user: User) => firebaseAuth.sendEmailVerification(user);
+
+export const CreateEmailAndPasswordUser = async (email: string, password: string): Promise<UserCredential> =>
+  firebaseAuth.createUserWithEmailAndPassword(auth, email, password).then(credential => {
+    SendVerifyEmail(credential.user);
+    firebaseAuth.sendEmailVerification(credential.user);
+    localStorage.setItem('emailForSignIn', email);
+    return credential;
+  });
+
+export const SignInWithEmailAndPassword = async (email: string, password: string): Promise<UserCredential> =>
+  firebaseAuth.signInWithEmailAndPassword(auth, email, password).then(credentials => {
+    localStorage.setItem('emailForSignIn', email);
+    return credentials;
+  });
+
+export const SignInWithGoogle = async (): Promise<UserCredential> =>
+  firebaseAuth.signInWithPopup(auth, new firebaseAuth.GoogleAuthProvider());

@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { FlexColumn, FlexRow } from '../Components/Common/Container';
+import { Text } from '../Components/Common/Text';
 import { useUserContext } from '../Contexts/UserContext';
-import { firebaseAuth } from '../Services/FirebaseService';
+import { firebaseAuth, SendVerifyEmail } from '../Services/FirebaseService';
 
 export const Profile = (): JSX.Element => {
   const { user, setUser } = useUserContext();
   const [displayName, setDisplayName] = useState<string>('');
+  const [emailSent, setEmailSent] = useState<boolean>(false);
 
   const handleUpdateUsername = async () => {
     if (user) {
@@ -23,22 +26,45 @@ export const Profile = (): JSX.Element => {
     }
   };
 
+  const handleVerify = async () => user && SendVerifyEmail(user).then(() => setEmailSent(true));
+
   return (
     <StyledProfilePage>
       {user && (
         <>
-          <h2>User Info</h2>
-          {!user.emailVerified && <p>Please verify your email account.</p>}
-          <p>Display Name: {user.displayName || `Please Set Below`}</p>
-          <p>Email: {user?.email}</p>
-          <h2>Update User</h2>
-          <form>
-            <label>Display Name</label>
+          <Text underlined={true} fontSize={'1.5rem'}>
+            User Info
+          </Text>
+          <FlexColumn>
+            {!user.emailVerified && (
+              <FlexRow>
+                <Text color={'tomato'} margin={'0 0.5rem'}>
+                  ❗ Please verify your email address.
+                </Text>
+                {emailSent ? (
+                  <Text color={'#00ff80'} margin={'0 0.5rem'}>
+                    Email Sent!
+                  </Text>
+                ) : (
+                  <Text margin={'0'} onClick={handleVerify}>
+                    Re-Send Email
+                  </Text>
+                )}
+              </FlexRow>
+            )}
+            <Text>Display Name: {user.displayName || `Please Set Below`}</Text>
+            <Text>Email: {user?.email}</Text>
+          </FlexColumn>
+          <Text underlined={true} fontSize={'1.5rem'}>
+            Update User
+          </Text>
+          <FlexRow align={'center'}>
+            <Text>Display Name</Text>
             <input onChange={e => setDisplayName(e.target.value)} type="text" placeholder="Update Display Name" />
             <button type="button" onClick={handleUpdateUsername}>
               update!
             </button>
-          </form>
+          </FlexRow>
         </>
       )}
     </StyledProfilePage>

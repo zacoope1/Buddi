@@ -21,6 +21,7 @@ const HomeComponent = () => {
   return (
     <>
       <h3>Welcome{user && `, ${user.displayName}`}!</h3>
+      {user && <></>}
     </>
   );
 };

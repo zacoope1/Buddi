@@ -22,7 +22,7 @@ export const UserContextProvider = ({ children }: HTMLAttributes<HTMLElement>) =
   };
 
   const performLogOut = () => {
-    //TODO: Clear Cache
+    localStorage.clear();
     setIsLoggedIn(false);
   };
 
