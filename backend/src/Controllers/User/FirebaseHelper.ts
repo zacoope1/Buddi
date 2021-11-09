@@ -1,4 +1,4 @@
-import { getEnvironementVariable } from '../../Shared/EnvrironmentHelper';
+import { getEnvironementVariable } from '../../Helpers/EnvrironmentHelper';
 import { initializeApp } from 'firebase/app';
 
 export type FirebaseConfigType = {

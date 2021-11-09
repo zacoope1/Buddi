@@ -2,10 +2,10 @@ import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { getEnvironementVariable } from './Shared/EnvrironmentHelper';
 import { UserController } from './Controllers/User/UserController';
-import { getFirebaseConfig } from './Controllers/User/FirebaseController';
 import FirebaseAdmin from 'firebase-admin';
+import { getEnvironementVariable } from './Helpers/EnvrironmentHelper';
+import { getFirebaseConfig } from './Controllers/User/FirebaseHelper';
 
 dotenv.config();
 
