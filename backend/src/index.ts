@@ -6,7 +6,6 @@ import { getEnvironementVariable } from './Shared/EnvrironmentHelper';
 import { UserController } from './Controllers/User/UserController';
 import { getFirebaseConfig } from './Controllers/User/FirebaseController';
 import FirebaseAdmin from 'firebase-admin';
-import { calculateBackoffMillis } from '@firebase/util';
 
 dotenv.config();
 
@@ -37,7 +36,14 @@ const firebaseAdmin = FirebaseAdmin.initializeApp({
 
 const app = express();
 app.use(helmet());
-app.use(cors({ origin: '*', allowedHeaders: '*', credentials: true, methods: '*' }));
+app.use(
+  cors({
+    origin: '*',
+    methods: '*',
+    allowedHeaders: ['*', 'Authorization'],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 /* Authorization */
@@ -47,7 +53,7 @@ const checkAuth = async (req: any, res: any, next: any) => {
       .auth()
       .verifyIdToken(req.headers.authorization, true)
       .then(claims => {
-        !claims.email_verified && res.status(403).send('You must verify your email before using this app.');
+        if (!claims.email_verified) throw 'Error: Email Not Verified!';
         next();
       })
       .catch(error => {
