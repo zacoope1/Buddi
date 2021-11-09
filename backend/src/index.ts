@@ -5,8 +5,7 @@ import helmet from 'helmet';
 import { UserController } from './Controllers/User/UserController';
 import FirebaseAdmin from 'firebase-admin';
 import { getEnvironementVariable } from './Helpers/EnvrironmentHelper';
-import { getFirebaseConfig } from './Controllers/User/FirebaseHelper';
-
+import { getFirebaseConfig } from './Controllers/Firebase/FirebaseConfigSetup';
 dotenv.config();
 
 const PORT = getEnvironementVariable('SERVER_PORT');
