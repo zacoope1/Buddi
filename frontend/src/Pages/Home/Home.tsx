@@ -5,7 +5,7 @@ import { Login } from './Login';
 import { useHistory } from 'react-router-dom';
 import { PROFILE } from '../../Routes';
 import { Button } from '../../Components/Common/Button';
-import { Get } from '../../Services/HttpClient';
+import { Put } from '../../Services/HttpClient';
 
 export const Home = (): JSX.Element => {
   const { isLoggedIn } = useUserContext();
@@ -28,7 +28,9 @@ const HomeComponent = () => {
         <>
           <Button
             onClick={async () => {
-              Get('/user', await user.getIdToken()).then(res => setContent(res.data.message));
+              Put('/user', await user.getIdToken(), { userUpdateRequest: {} }).then(res =>
+                setContent(res.data.message),
+              );
             }}
           >
             Get

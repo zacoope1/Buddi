@@ -14,18 +14,20 @@ UserController.get('/', async (req, res) =>
 );
 
 /* Update User  */
-UserController.post('/', async (req, res) => {
+UserController.put('/', async (req, res) => {
   const updateRequest: UserUpdateRequest = req.body.userUpdateRequest;
-  console.log(updateRequest);
-  !updateRequest && res.status(400).send({ message: 'userUpdateRequest is empty or does not exist!' });
-  firebaseAdmin
-    .auth()
-    .updateUser(
-      req.app.locals.claims.uid,
-      updateRequest.email ? { ...updateRequest, emailVerified: false } : updateRequest,
-    )
-    .then(user => res.status(200).send({ message: `${user.displayName} Updated!`, user }))
-    .catch(error => res.status(500).send({ message: 'User not updated!' }));
+  if (!updateRequest || Object.keys(updateRequest).length == 0) {
+    res.status(400).send({ message: 'Request body is missing required attributes!' });
+  } else {
+    firebaseAdmin
+      .auth()
+      .updateUser(
+        req.app.locals.claims.uid,
+        updateRequest.email ? { ...updateRequest, emailVerified: false } : updateRequest,
+      )
+      .then(user => res.status(200).send({ message: `${user.displayName} Updated!`, user }))
+      .catch(error => res.status(500).send({ message: 'User not updated!' }));
+  }
 });
 
 /* Delete User */
