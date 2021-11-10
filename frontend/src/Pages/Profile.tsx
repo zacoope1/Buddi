@@ -36,6 +36,9 @@ export const Profile = (): JSX.Element => {
             User Info
           </Text>
           <FlexColumn>
+            {user.photoURL && <img width={50} height={50} src={user.photoURL} alt="PFP" />}
+            <Text>Display Name: {user.displayName || `Please Set Below`}</Text>
+            <Text>Email: {user?.email}</Text>
             {!user.emailVerified && (
               <FlexRow>
                 <Text color={'tomato'} margin={'0 0.5rem'}>
@@ -52,8 +55,6 @@ export const Profile = (): JSX.Element => {
                 )}
               </FlexRow>
             )}
-            <Text>Display Name: {user.displayName || `Please Set Below`}</Text>
-            <Text>Email: {user?.email}</Text>
           </FlexColumn>
           <Text underlined={true} fontSize={'1.5rem'}>
             Update User

@@ -1,19 +1,7 @@
-export type NewUserRequest = {
-  firstName: string;
-  lastName: string;
-  username: string;
-  password: string;
-  email: string;
-  handle: string;
-};
-
-export type User = {
-  firstName: string;
-  lastName: string;
-  username: string;
-  hash: string;
-  salt: string;
-  email: string;
-  handle: string;
-  accountCreated: string;
+export type UserUpdateRequest = {
+  readonly email?: string;
+  readonly displayName?: string;
+  readonly phoneNumber?: string;
+  readonly photoURL?: string;
+  readonly password?: string;
 };
