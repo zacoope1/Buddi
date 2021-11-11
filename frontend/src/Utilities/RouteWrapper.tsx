@@ -4,7 +4,7 @@ import { NavBar } from '../Components/NavBar/NavBar';
 import { useUserContext } from '../Contexts/UserContext';
 import { HOME } from '../Routes';
 
-type LayoutType = 'NavBar' | 'Default';
+type LayoutType = 'Default' | 'NoNavBar';
 
 type RouteWrapperProps = {
   readonly path: string;
@@ -27,23 +27,39 @@ export const RouteWrapper = ({
   if (!isLoggedIn && mustBeLoggedIn) history.push(HOME);
 
   return (
-    <PageLayout>
+    <PageContainer>
       {layout === 'Default' ? (
-        <Route path={path} exact={exact} component={component} />
-      ) : (
         <>
-          <NavBar />
-          <Route path={path} exact={exact} component={component} />
+          {isLoggedIn && <NavBar />}
+          <DefaultPageLayout>
+            <Route path={path} exact={exact} component={component} />
+          </DefaultPageLayout>
         </>
+      ) : (
+        <DefaultPageLayout>
+          <Route path={path} exact={exact} component={component} />
+        </DefaultPageLayout>
       )}
-    </PageLayout>
+    </PageContainer>
   );
 };
 
-const PageLayout = styled.div`
+const DefaultPageLayout = styled.div`
+  display: flex;
+  flex-direction: column;
   overflow: auto;
-  width: 100%;
+  width: auto;
   height: 100%;
+  padding: 0 1rem;
   background: ${props => props.theme.primary.backgroundColor};
   color: ${props => props.theme.primary.color};
+`;
+
+const PageContainer = styled.div`
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;

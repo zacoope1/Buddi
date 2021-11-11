@@ -19,9 +19,9 @@ export const AppRouter = (): JSX.Element => {
       <UserContextProvider>
         <Router>
           <Switch>
-            <RouteWrapper path={HOME} mustBeLoggedIn={false} exact component={Home} layout={'NavBar'} />
-            <RouteWrapper path={PROFILE} mustBeLoggedIn={true} exact component={Profile} layout={'NavBar'} />
-            <RouteWrapper path={PAGE_NOT_FOUND} mustBeLoggedIn={false} component={NotFound} layout={'Default'} />
+            <RouteWrapper path={HOME} mustBeLoggedIn={false} exact component={Home} layout={'Default'} />
+            <RouteWrapper path={PROFILE} mustBeLoggedIn={true} exact component={Profile} layout={'Default'} />
+            <RouteWrapper path={PAGE_NOT_FOUND} mustBeLoggedIn={false} component={NotFound} layout={'NoNavBar'} />
             <Redirect to="/404" />
           </Switch>
         </Router>

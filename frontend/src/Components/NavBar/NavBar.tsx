@@ -2,26 +2,37 @@ import styled from 'styled-components';
 import { Link as RouterLink } from 'react-router-dom';
 import { HOME, PROFILE } from '../../Routes';
 import { useUserContext } from '../../Contexts/UserContext';
+import { Button } from '../Common/Button';
+import { useEffect, useState } from 'react';
 
 export const NavBar = (): JSX.Element => {
-  const { isLoggedIn, performLogOut } = useUserContext();
+  const { performLogOut } = useUserContext();
+  const [mobileNav, setMobileNav] = useState<boolean>(false);
 
-  return (
-    <StyledNavBar>
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      window.innerWidth <= 500 ? setMobileNav(true) : setMobileNav(false);
+    });
+  }, []);
+
+  return mobileNav ? (
+    <></>
+  ) : (
+    <DesktopNavbar>
       <NavList>
         <Link to={HOME}>Home</Link>
         <Link to={PROFILE}>Profile</Link>
       </NavList>
-      {isLoggedIn && (
-        <ProfileList>
-          <button onClick={performLogOut}>Log Out</button>
-        </ProfileList>
-      )}
-    </StyledNavBar>
+      <ProfileList>
+        <Button backgroundColor={'red'} width={'7rem'} height={'2rem'} onClick={performLogOut}>
+          Log Out
+        </Button>
+      </ProfileList>
+    </DesktopNavbar>
   );
 };
 
-const StyledNavBar = styled.div`
+const DesktopNavbar = styled.div`
   display: flex;
   align-items: center;
   padding: 1rem;
@@ -42,17 +53,24 @@ const NavList = styled.ul`
 `;
 
 const Link = styled(RouterLink)`
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 16px;
   font-weight: 600;
-  padding: 5px 10px;
+  padding: 0.5rem 1.25rem;
   color: ${props => props.theme.primary.button.color};
   background-color: ${props => props.theme.primary.button.backgroundColor};
-  text-decoration: none;
+  border: 1px solid ${props => props.theme.transparent};
   outline: none;
-  border-radius: 15px;
+  border-radius: 90px;
+  text-align: center;
 
   &:hover {
-    opacity: 0.8;
-    transition: 0.5s;
+    border: 1px solid ${props => props.theme.primary.trim};
+  }
+
+  &:active {
+    opacity: 0.75;
   }
 `;
 
