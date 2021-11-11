@@ -5,7 +5,7 @@ import { Login } from './Login';
 import { useHistory } from 'react-router-dom';
 import { PROFILE } from '../../Routes';
 import { Button } from '../../Components/Common/Button';
-import { Put } from '../../Services/HttpClient';
+import { Get } from '../../Services/HttpClient';
 
 export const Home = (): JSX.Element => {
   const { isLoggedIn } = useUserContext();
@@ -15,6 +15,7 @@ export const Home = (): JSX.Element => {
 const HomeComponent = () => {
   const { user } = useUserContext();
   const history = useHistory();
+
   const [content, setContent] = useState<string | null>(null);
 
   useEffect(() => {
@@ -28,9 +29,7 @@ const HomeComponent = () => {
         <>
           <Button
             onClick={async () => {
-              Put('/user', await user.getIdToken(), { userUpdateRequest: {} }).then(res =>
-                setContent(res.data.message),
-              );
+              Get('/event', await user.getIdToken()).then(res => setContent(res.data.message));
             }}
           >
             Get

@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { BACKEND_URL } from '../Shared/Constants';
 
 const HEADERS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': '*', Accept: 'application/json' };
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const resolveUrl = (url: string, isOverride: boolean): string => {
   return isOverride ? url : `${BACKEND_URL}${url}`;

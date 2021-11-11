@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import { ThemeContextProvider } from './Contexts/ThemeContext';
 import './index.css';
 import AppRouter from './Router';
+import { checkConstants } from './Shared/Constants';
+
+checkConstants();
 
 ReactDOM.render(
   <React.StrictMode>
