@@ -2,8 +2,10 @@ import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { UserController } from './Controllers/UserController';
 import FirebaseAdmin from 'firebase-admin';
+import http from 'http';
+import { Server } from 'socket.io';
+import { UserController } from './Controllers/UserController';
 import { getEnvironementVariable } from './Helpers/EnvrironmentHelper';
 import { getFirebaseConfig } from './Helpers/FirebaseConfigSetup';
 import { EventController } from './Controllers/EventController';
@@ -11,9 +13,13 @@ import { FriendshipController } from './Controllers/FriendshipController';
 import { InviteController } from './Controllers/InviteController';
 import { PostController } from './Controllers/PostController';
 import { SessionController } from './Controllers/SessionController';
+import { setChatEvents } from './SocketControllers/ChatController';
+import { printDebug, log } from './Helpers/Logger';
+
 dotenv.config();
 
 const PORT = getEnvironementVariable('SERVER_PORT');
+export const DEBUG_MODE_ENABLED = getEnvironementVariable('DEBUG_MODE_ENABLED', false) || false;
 
 if (!PORT) {
   console.error('Failed To Retrieve Server Port From Environment.');
@@ -39,6 +45,11 @@ export const firebaseAdmin = FirebaseAdmin.initializeApp({
 });
 
 const app = express();
+const server = http.createServer(app);
+export const io = new Server(server, {
+  cors: { origin: '*', methods: ['GET', 'POST'], allowedHeaders: ['*', 'Authorization'] },
+});
+
 app.use(helmet());
 app.use(
   cors({
@@ -50,8 +61,15 @@ app.use(
 );
 app.use(express.json());
 
+/* Give all requests access to io */
+app.use((req, res, next) => {
+  req.app.locals.io = io;
+  return next();
+});
+
 /* Authorization */
 const checkAuth = async (req: any, res: any, next: any) => {
+  console.log('Checking auth');
   if (req.headers.authorization) {
     firebaseAdmin
       .auth()
@@ -71,6 +89,26 @@ const checkAuth = async (req: any, res: any, next: any) => {
   }
 };
 
+/* io Auth */
+io.use((socket, next) => {
+  if (socket.request.headers.authorization) {
+    firebaseAdmin
+      .auth()
+      .verifyIdToken(socket.request.headers.authorization, true)
+      .then(claims => {
+        if (!claims.email_verified) next(new Error('Error: Email Not Verified!'));
+        else {
+          next();
+        }
+      })
+      .catch(error => {
+        next(new Error('Not authorized'));
+      });
+  } else {
+    next(new Error('No Auth Token Present'));
+  }
+});
+
 /* Add Authorization Before Endpoint */
 app.use('/user', checkAuth);
 app.use('/event', checkAuth);
@@ -87,5 +125,12 @@ app.use('/invite', InviteController);
 app.use('/post', PostController);
 app.use('/session', SessionController);
 
-/* Start Server */
-app.listen(PORT, () => console.log(`Server Started On Port: ${PORT}`));
+/* io */
+setChatEvents(io);
+
+/* Start Servers */
+server.listen(PORT, () => {
+  console.log('\n\n');
+  log(`Server Started On Port: ${PORT}`);
+  printDebug('DEBUG MODE ENABLED!');
+});

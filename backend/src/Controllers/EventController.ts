@@ -14,6 +14,8 @@ export const EventController = express.Router();
 //     res.status(500).send({ message: 'Database Error' });
 //   });
 
-EventController.get('/', async (req, res) => {});
+EventController.get('/', async (req, res) => {
+  res.status(200).send({ message: 'Event Got!' });
+});
 
 EventController.post('/', async (req, res) => {});
