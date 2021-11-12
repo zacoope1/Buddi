@@ -45,8 +45,6 @@ export const RouteWrapper = ({
 };
 
 const DefaultPageLayout = styled.div`
-  display: flex;
-  flex-direction: column;
   overflow: auto;
   width: auto;
   height: 100%;

@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { Link as RouterLink } from 'react-router-dom';
-import { HOME, PROFILE } from '../../Routes';
+import { CHAT, HOME, INVITES, PROFILE } from '../../Routes';
 import { useUserContext } from '../../Contexts/UserContext';
 import { Button } from '../Common/Button';
 import { useEffect, useState } from 'react';
+import { SvgIcon } from '../Common/SvgIcon';
 
 export const NavBar = (): JSX.Element => {
   const { performLogOut } = useUserContext();
@@ -20,8 +21,10 @@ export const NavBar = (): JSX.Element => {
   ) : (
     <DesktopNavbar>
       <NavList>
-        <Link to={HOME}>Home</Link>
-        <Link to={PROFILE}>Profile</Link>
+        <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'House'} to={HOME} />
+        <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'Profile'} to={PROFILE} />
+        <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'Chat'} to={CHAT} />
+        <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'Mail'} to={INVITES} />
       </NavList>
       <ProfileList>
         <Button backgroundColor={'red'} width={'7rem'} height={'2rem'} onClick={performLogOut}>
@@ -49,28 +52,6 @@ const NavList = styled.ul`
   list-style: none;
   > * {
     margin: 0 1rem;
-  }
-`;
-
-const Link = styled(RouterLink)`
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  padding: 0.5rem 1.25rem;
-  color: ${props => props.theme.primary.button.color};
-  background-color: ${props => props.theme.primary.button.backgroundColor};
-  border: 1px solid ${props => props.theme.transparent};
-  outline: none;
-  border-radius: 90px;
-  text-align: center;
-
-  &:hover {
-    border: 1px solid ${props => props.theme.primary.trim};
-  }
-
-  &:active {
-    opacity: 0.75;
   }
 `;
 
