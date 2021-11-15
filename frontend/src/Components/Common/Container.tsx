@@ -1,10 +1,20 @@
 import styled from 'styled-components';
 
+export type JustifyContentType =
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly';
+
+export type AlignItemsType = 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
+
 type FlexContainerProps = {
   readonly margin?: string;
   readonly padding?: string;
-  readonly align?: string;
-  readonly justify?: string;
+  readonly align?: AlignItemsType | JustifyContentType;
+  readonly justify?: JustifyContentType | AlignItemsType;
 } & React.HTMLProps<HTMLDivElement>;
 
 export const FlexRow = ({

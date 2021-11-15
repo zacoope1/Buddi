@@ -23,8 +23,8 @@ const getFirebaseConfig = (): FirebaseConfigType => ({
   measurementId: 'G-4RBT8HHXT2',
 });
 
-export const firebaseApp = firebase.initializeApp(getFirebaseConfig());
-const auth = firebaseAuth.getAuth(firebaseApp);
+export const firebaseApp = firebase.initializeApp(getFirebaseConfig(), 'Buddi');
+export const auth = firebaseAuth.getAuth(firebaseApp);
 
 export const SendVerifyEmail = async (user: firebaseAuth.User) => firebaseAuth.sendEmailVerification(user);
 
@@ -42,11 +42,20 @@ export const CreateEmailAndPasswordUser = async (
 export const SignInWithEmailAndPassword = async (
   email: string,
   password: string,
+  keepLoggedIn: boolean,
 ): Promise<firebaseAuth.UserCredential> =>
-  firebaseAuth.signInWithEmailAndPassword(auth, email, password).then(credentials => {
-    localStorage.setItem('emailForSignIn', email);
-    return credentials;
-  });
+  keepLoggedIn
+    ? firebaseAuth.setPersistence(auth, firebaseAuth.browserLocalPersistence).then(() =>
+        firebaseAuth.signInWithEmailAndPassword(auth, email, password).then(credentials => {
+          return credentials;
+        }),
+      )
+    : firebaseAuth.signInWithEmailAndPassword(auth, email, password).then(credentials => {
+        return credentials;
+      });
 
 export const SignInWithGoogle = async (): Promise<firebaseAuth.UserCredential> =>
-  firebaseAuth.signInWithPopup(auth, new firebaseAuth.GoogleAuthProvider());
+  firebaseAuth
+    .setPersistence(auth, firebaseAuth.browserLocalPersistence)
+    .then(() => firebaseAuth.signInWithPopup(auth, new firebaseAuth.GoogleAuthProvider()))
+    .catch(error => error);

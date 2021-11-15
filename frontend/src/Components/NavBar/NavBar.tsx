@@ -1,14 +1,15 @@
 import styled from 'styled-components';
-import { Link as RouterLink } from 'react-router-dom';
 import { CHAT, HOME, INVITES, PROFILE } from '../../Routes';
 import { useUserContext } from '../../Contexts/UserContext';
 import { Button } from '../Common/Button';
 import { useEffect, useState } from 'react';
 import { SvgIcon } from '../Common/SvgIcon';
+import { JustifyContentType } from '../Common/Container';
 
 export const NavBar = (): JSX.Element => {
   const { performLogOut } = useUserContext();
   const [mobileNav, setMobileNav] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   useEffect(() => {
     window.addEventListener('resize', () => {
@@ -16,10 +17,24 @@ export const NavBar = (): JSX.Element => {
     });
   }, []);
 
+  const toggleMenu = (toState: boolean) => setIsMenuOpen(toState);
+
   return mobileNav ? (
-    <></>
+    <NavBarContainer justify={'flex-end'}>
+      {!isMenuOpen ? (
+        <SvgIcon
+          height={'2rem'}
+          width={'2rem'}
+          hoverColor="white"
+          type={'Hamburger'}
+          onClick={() => toggleMenu(true)}
+        />
+      ) : (
+        <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'X'} onClick={() => toggleMenu(false)} />
+      )}
+    </NavBarContainer>
   ) : (
-    <DesktopNavbar>
+    <NavBarContainer>
       <NavList>
         <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'House'} to={HOME} />
         <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'Profile'} to={PROFILE} />
@@ -31,13 +46,16 @@ export const NavBar = (): JSX.Element => {
           Log Out
         </Button>
       </ProfileList>
-    </DesktopNavbar>
+    </NavBarContainer>
   );
 };
 
-const DesktopNavbar = styled.div`
+type NavBarProps = { readonly justify?: JustifyContentType };
+
+const NavBarContainer = styled.div.attrs(({ justify }: NavBarProps) => ({ justify: justify }))`
   display: flex;
   align-items: center;
+  ${props => props.justify && `justify-content: ${props.justify};`}
   padding: 1rem;
   background-color: ${props => props.theme.secondary.backgroundColor};
 `;

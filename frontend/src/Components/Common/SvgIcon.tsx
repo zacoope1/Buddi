@@ -11,6 +11,8 @@ import { ReactComponent as Profile } from '../../Assets/img/svg/Profile.svg';
 import { ReactComponent as Save } from '../../Assets/img/svg/Save.svg';
 import { ReactComponent as Search } from '../../Assets/img/svg/Search.svg';
 import { ReactComponent as Settings } from '../../Assets/img/svg/Settings.svg';
+import { ReactComponent as X } from '../../Assets/img/svg/X.svg';
+import { ReactComponent as Hamburger } from '../../Assets/img/svg/Hamburger.svg';
 
 type SvgType =
   | 'Calendar'
@@ -23,7 +25,9 @@ type SvgType =
   | 'Profile'
   | 'Save'
   | 'Search'
-  | 'Settings';
+  | 'Settings'
+  | 'X'
+  | 'Hamburger';
 
 type SvgIconProps = {
   readonly type: SvgType;
@@ -79,6 +83,10 @@ export const SvgIcon = ({
         return <Search />;
       case 'Settings':
         return <Settings />;
+      case 'X':
+        return <X />;
+      case 'Hamburger':
+        return <Hamburger />;
       default:
         return <Friends />;
     }

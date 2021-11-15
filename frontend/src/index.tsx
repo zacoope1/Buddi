@@ -5,6 +5,10 @@ import './index.css';
 import AppRouter from './Router';
 import { checkConstants } from './Shared/Constants';
 
+// window.onload = () => {
+//   document.body.className += 'body-drop-in';
+// };
+
 checkConstants();
 
 ReactDOM.render(

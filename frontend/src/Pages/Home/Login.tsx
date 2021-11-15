@@ -9,6 +9,8 @@ import {
 import { useHistory } from 'react-router-dom';
 import { Button, GoogleIDPButton } from '../../Components/Common/Button';
 import { TextButton } from '../../Components/Common/TextButton';
+import { Text } from '../../Components/Common/Text';
+import { FlexRow } from '../../Components/Common/Container';
 
 export const Login = (): JSX.Element => {
   const { performLogIn } = useUserContext();
@@ -17,7 +19,7 @@ export const Login = (): JSX.Element => {
 
   const handleLogInWithGoogle = async () => {
     SignInWithGoogle()
-      .then(credentials => performLogIn(credentials.user))
+      .then(credentials => performLogIn(credentials.user, true))
       .catch(() => history.push('/404'));
   };
 
@@ -26,16 +28,23 @@ export const Login = (): JSX.Element => {
   };
 
   return (
-    <StyledLoginPage>
-      <StyledLoginPanel>
-        <h1>{isRegister ? 'Sign Up' : 'Login'}</h1>
-        {isRegister ? <RegisterForm /> : <EmailLoginForm />}
-        <GoogleIDPButton onClick={handleLogInWithGoogle} />
-        <TextButton onClick={toggleRegister}>
-          {isRegister ? 'Already Have An Account?' : 'Sign Up With Email'}
-        </TextButton>
-      </StyledLoginPanel>
-    </StyledLoginPage>
+    <>
+      <StyledLoginPage>
+        <Text margin={'1rem 0.5rem'} weight={'bold'} fontSize={'6rem'}>
+          Buddi
+        </Text>
+        <StyledLoginPanel>
+          <Text underlined={true} margin={'1rem 0.5rem'} weight={'bold'} fontSize={'3rem'}>
+            {isRegister ? 'Sign Up' : 'Login'}
+          </Text>
+          {isRegister ? <RegisterForm /> : <EmailLoginForm />}
+          <GoogleIDPButton onClick={handleLogInWithGoogle} />
+          <TextButton onClick={toggleRegister}>
+            {isRegister ? 'Already Have An Account?' : 'Sign Up With Email'}
+          </TextButton>
+        </StyledLoginPanel>
+      </StyledLoginPage>
+    </>
   );
 };
 
@@ -54,7 +63,7 @@ const RegisterForm = (): JSX.Element => {
     } else {
       CreateEmailAndPasswordUser(email, password)
         .then(credentials => {
-          performLogIn(credentials.user);
+          performLogIn(credentials.user, false);
         })
         .catch(error => setError(error.message));
     }
@@ -76,6 +85,7 @@ const EmailLoginForm = (): JSX.Element => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [keepLoggedIn, setKeepLoggedIn] = useState<boolean>(false);
 
   const handleEmailLogin = async () => {
     if (email.length <= 0 || password.length <= 0) {
@@ -83,8 +93,8 @@ const EmailLoginForm = (): JSX.Element => {
       return;
     }
     setError('');
-    SignInWithEmailAndPassword(email, password)
-      .then(credentials => performLogIn(credentials.user))
+    SignInWithEmailAndPassword(email, password, keepLoggedIn)
+      .then(credentials => performLogIn(credentials.user, keepLoggedIn))
       .catch(error => setError(error.message));
   };
 
@@ -93,6 +103,17 @@ const EmailLoginForm = (): JSX.Element => {
       {error && error.length > 0 && <ErrorText>⚠️ {error}</ErrorText>}
       <StyledInput onChange={e => setEmail(e.target.value)} type="email" placeholder="Email" />
       <StyledInput onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" />
+      <FlexRow justify={'flex-start'} align={'center'}>
+        <input
+          onChange={e => {
+            setKeepLoggedIn(e.target.checked);
+          }}
+          type="checkbox"
+        />
+        <Text weight={'bold'} fontSize={'0.75rem'}>
+          Keep Me Logged In
+        </Text>
+      </FlexRow>
       <Button onClick={handleEmailLogin}>Sign In</Button>
     </StyledForm>
   );
