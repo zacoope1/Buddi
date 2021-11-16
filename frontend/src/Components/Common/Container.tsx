@@ -15,6 +15,7 @@ type FlexContainerProps = {
   readonly padding?: string;
   readonly align?: AlignItemsType | JustifyContentType;
   readonly justify?: JustifyContentType | AlignItemsType;
+  readonly onClick?: () => void;
 } & React.HTMLProps<HTMLDivElement>;
 
 export const FlexRow = ({
@@ -23,8 +24,9 @@ export const FlexRow = ({
   justify = 'flex-start',
   align = 'flex-start',
   children,
+  onClick,
 }: FlexContainerProps): JSX.Element => (
-  <StyledFlexRow margin={margin} padding={padding} justify={justify} align={align}>
+  <StyledFlexRow onClick={onClick} margin={margin} padding={padding} justify={justify} align={align}>
     {children}
   </StyledFlexRow>
 );
@@ -34,9 +36,10 @@ export const FlexColumn = ({
   padding = '0',
   justify = 'flex-start',
   align = 'flex-start',
+  onClick,
   children,
 }: FlexContainerProps): JSX.Element => (
-  <StyledFlexColumn margin={margin} padding={padding} justify={justify} align={align}>
+  <StyledFlexColumn onClick={onClick} margin={margin} padding={padding} justify={justify} align={align}>
     {children}
   </StyledFlexColumn>
 );

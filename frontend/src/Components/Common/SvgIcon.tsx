@@ -13,6 +13,7 @@ import { ReactComponent as Search } from '../../Assets/img/svg/Search.svg';
 import { ReactComponent as Settings } from '../../Assets/img/svg/Settings.svg';
 import { ReactComponent as X } from '../../Assets/img/svg/X.svg';
 import { ReactComponent as Hamburger } from '../../Assets/img/svg/Hamburger.svg';
+import { ReactComponent as Chevron } from '../../Assets/img/svg/Chevron.svg';
 
 type SvgType =
   | 'Calendar'
@@ -27,7 +28,8 @@ type SvgType =
   | 'Search'
   | 'Settings'
   | 'X'
-  | 'Hamburger';
+  | 'Hamburger'
+  | 'Chevron';
 
 type SvgIconProps = {
   readonly type: SvgType;
@@ -38,6 +40,8 @@ type SvgIconProps = {
   readonly backgroundColor?: string;
   readonly padding?: string;
   readonly margin?: string;
+  readonly cursor?: string;
+  readonly rotation?: string;
   readonly to?: string;
   readonly onClick?: () => void;
 } & React.HTMLProps<HTMLDivElement>;
@@ -51,6 +55,8 @@ export const SvgIcon = ({
   color,
   hoverColor,
   backgroundColor,
+  cursor,
+  rotation,
   to,
   onClick,
   children,
@@ -87,6 +93,8 @@ export const SvgIcon = ({
         return <X />;
       case 'Hamburger':
         return <Hamburger />;
+      case 'Chevron':
+        return <Chevron />;
       default:
         return <Friends />;
     }
@@ -101,6 +109,8 @@ export const SvgIcon = ({
       margin={margin}
       hoverColor={hoverColor}
       backgroundColor={backgroundColor}
+      rotation={rotation}
+      cursor={cursor}
       onClick={to ? () => goTo(to) : onClick}
     >
       {resolveIcon(type)}
@@ -118,6 +128,8 @@ const StyledSvgIcon = styled.div.attrs(
     color = 'white',
     hoverColor,
     backgroundColor,
+    cursor,
+    rotation,
     to,
     onClick,
   }: SvgIconProps) => ({
@@ -128,16 +140,19 @@ const StyledSvgIcon = styled.div.attrs(
     margin: margin,
     hoverColor: hoverColor,
     backgroundColor: backgroundColor,
+    cursor: cursor,
+    rotation: rotation,
     to: to,
     onClick: onClick,
   }),
 )`
-  cursor: ${props => (props.to || props.onClick ? `pointer` : `default`)};
+  cursor: ${props => props.cursor || (props.to || props.onClick ? `pointer` : `default`)};
   width: ${props => props.width};
   height: ${props => props.height};
   padding: ${props => props.padding};
   margin: ${props => props.margin};
   ${props => props.backgroundColor && `background-color: ${props.backgroundColor};`}
+  ${props => props.rotation && `transform: rotate(${props.rotation}deg);`}
 
   >* {
     width: ${props => props.width};

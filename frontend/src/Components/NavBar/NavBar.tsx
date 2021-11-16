@@ -1,13 +1,11 @@
 import styled from 'styled-components';
-import { CHAT, HOME, INVITES, PROFILE } from '../../Routes';
-import { useUserContext } from '../../Contexts/UserContext';
-import { Button } from '../Common/Button';
+import { CHAT, HOME, INVITES } from '../../Routes';
 import { useEffect, useState } from 'react';
 import { SvgIcon } from '../Common/SvgIcon';
 import { JustifyContentType } from '../Common/Container';
+import { SettingsMenu } from '../Settings/SettingsMenu';
 
 export const NavBar = (): JSX.Element => {
-  const { performLogOut } = useUserContext();
   const [mobileNav, setMobileNav] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -37,14 +35,11 @@ export const NavBar = (): JSX.Element => {
     <NavBarContainer>
       <NavList>
         <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'House'} to={HOME} />
-        <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'Profile'} to={PROFILE} />
         <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'Chat'} to={CHAT} />
         <SvgIcon height={'2rem'} width={'2rem'} hoverColor="white" type={'Mail'} to={INVITES} />
       </NavList>
       <ProfileList>
-        <Button backgroundColor={'red'} width={'7rem'} height={'2rem'} onClick={performLogOut}>
-          Log Out
-        </Button>
+        <SettingsMenu />
       </ProfileList>
     </NavBarContainer>
   );
